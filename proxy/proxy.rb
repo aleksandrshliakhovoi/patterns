@@ -5,14 +5,12 @@ class Account
     @balance = balance
   end
 
-  attr_reader :balance
-
   def deposit(amount)
-    balance += amount
+    @balance += amount
   end
 
   def withdraw(amount)
-    balance -= amount
+    @balance -= amount
   end
 
   def self.interest_rate_for(a_balance)
@@ -22,18 +20,17 @@ end
 
 class AccountProxy
   require 'etc'
-
   def initialize(real_account)
     @real_account = real_account
   end
 
   def method_missing(name, *args)
-    raise "Unauthorised access!" unless Etc.getlogin == 'artidex'
+    raise "Unauthorised access!" unless Etc.getlogin == 'fred'
     @real_account.send(name, *args)
   end
 end
 
 acc = Account.new(100)
 proxy = AccountProxy.new(acc)
-proxy.deposit(10)
-proxy.withdraw(50)
+puts proxy.deposit(10)
+puts proxy.withdraw(50)
